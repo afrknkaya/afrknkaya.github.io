@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TANYERİ 2025 - Menü</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+/* TEMEL STİLLER - TANYERİ Renk Paleti */
+html, body, h1, h2, h3, h4, h5, h6 { font-family: "Lato", sans-serif; }
+html { scroll-behavior: smooth; } /* Sayfa içi linklere yumuşak kaydırma için */
+
+:root {
+  --primary-color: #5D2B2C;
+  --secondary-color: #C89B4F;
+  --accent-color: #A88755;
+  --text-color-dark: #333333;
+  --text-color-light: #FFFFFF;
+  --background-color: #FDFBF5;
+  --card-background: #FFFFFF;
+  --footer-background: #ECE7DB;
+  --top-bar-height-desktop: 70px;
+  --top-bar-height-mobile: 55px;
+  --category-bar-padding-desktop: 10px; /* Dikey padding */
+  --category-bar-padding-mobile: 8px;   /* Dikey padding */
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color-dark);
+}
+
+/* ÜST BAR (HEADER) */
+.top-bar {
+  background-color:#FFFFFF;
+  color: var(--text-color-dark);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1001; /* Kategori barından ve modalden üstte */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  height: var(--top-bar-height-desktop);
+  display: flex;
+  align-items: center;
+  transition: top 0.3s ease-in-out;
+}
+.top-bar.nav-hidden {
+  top: calc(-1 * var(--top-bar-height-desktop)); /* Geniş ekran için */
+}
+
+.top-bar .logo-container {
+  padding-left: 24px;
+  cursor: pointer;
+}
+
+.top-bar .cafe-logo {
+  max-height: 50px; /* Geniş ekran için */
+  width: auto;
+  vertical-align: middle;
+}
+
+/* KATEGORİ BARI */
+.category-navbar {
+  background-color: var(--secondary-color);
+  padding: var(--category-bar-padding-desktop) 0;
+  margin-top: var(--top-bar-height-desktop);
+  position: sticky;
+  /* top değeri JS ile ayarlanacak (topBar'ın durumuna göre) */
+  z-index: 1000; /* Modalden altta, top-bar'dan altta */
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: top 0.3s ease-in-out;
+}
+/* .category-navbar.nav-hidden top değeri JS ile ayarlanacak */
+
+
+.category-navbar button {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 8px 18px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.category-navbar button:hover,
+.category-navbar button.active {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+}
+
+/* ANA İÇERİK ALANI */
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  /* padding-top JS ile veya ilk yüklemede sabit başlıkların altına göre ayarlanacak */
+  /* Şimdilik CSS'te kalsın, JS ile de güncellenebilir */
+  padding-top: calc(var(--top-bar-height-desktop) + 60px + 20px); /* 60px tahmini kat.bar yüksekliği */
+}
+
+.category-section {
+  margin-bottom: 50px;
+}
+
+.category-title {
+  font-size: 2.2em;
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--secondary-color);
+  padding-bottom: 12px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* ÜRÜN KARTLARI DİZİLİMİ - Mobil Öncelikli Güncelleme */
+.product-grid {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.product-card { background-color: var(--card-background); border-radius: 10px; box-shadow: 0 3px 6px rgba(93, 43, 44, 0.1); overflow: hidden; cursor: pointer; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; border: 1px solid #eee; display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-6px); box-shadow: 0 8px 15px rgba(93, 43, 44, 0.15); }
+.product-card img { width: 100%; height: 140px; object-fit: cover; } /* Mobil için güncellendi */
+.product-card .info { padding: 8px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; } /* Mobil için güncellendi */
+.product-card .name { font-size: 0.95em; font-weight: 600; color: var(--primary-color); margin-bottom: 4px; } /* Mobil için güncellendi */
+.product-card .price { font-size: 0.9em; color: var(--secondary-color); font-weight: bold; margin-top: auto; } /* Mobil için güncellendi */
+
+/* Geniş ekranlar için kart boyutları */
+@media (min-width: 820px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); gap: 25px; }
+  .product-card img { height: 220px; }
+  .product-card .info { padding: 20px; }
+  .product-card .name { font-size: 1.3em; }
+  .product-card .price { font-size: 1.2em; }
+}
+
+/* MODAL (POPUP) STİLLERİ */
+.modal { display: none; position: fixed; z-index: 1002; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); padding-top: 50px; }
+.modal-content { background-color: var(--card-background); margin: 5% auto; padding: 35px; border-radius: 10px; width: 90%; max-width: 650px; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.4); animation: fadeInModal 0.4s ease-out; }
+@keyframes fadeInModal { from {opacity: 0; transform: scale(0.95) translateY(-10px);} to {opacity: 1; transform: scale(1) translateY(0);} }
+.close-button { color: #999; position: absolute; top: 15px; right: 20px; font-size: 32px; font-weight: bold; cursor: pointer; transition: color 0.2s; }
+.close-button:hover, .close-button:focus { color: var(--primary-color); }
+.modal-image { width: 100%; max-height: 320px; object-fit: cover; border-radius: 6px; margin-bottom: 25px; border: 1px solid #ddd; }
+.modal-product-name { color: var(--primary-color); margin-bottom: 15px; font-size: 2em; text-align: center; }
+.modal-product-description { margin-bottom: 20px; line-height: 1.7; font-size: 1.05em; color: #555; }
+.modal-product-price { font-size: 1.6em; color: var(--secondary-color); font-weight: bold; text-align: right; margin-top: 15px; }
+
+/* FOOTER */
+.site-footer { background-color: var(--footer-background); color: var(--text-color-dark); padding: 40px 20px; text-align: center; margin-top: 50px; border-top: 3px solid var(--secondary-color); }
+.site-footer p { margin: 5px 0; }
+.site-footer a { color: var(--primary-color); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* Yapay Zeka Önerisi Bölümü Stilleri */
+.ai-recommendation-section {
+    margin-bottom: 50px;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border: 2px solid var(--accent-color);
+    text-align: center;
+}
+
+.ai-recommendation-title {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* AI Önerisi Kartı için özel stil */
+.ai-recommendation-section .product-card {
+    max-width: 400px; /* Tek kart olacağı için genişliğini kısıtlayabiliriz */
+    margin: 0 auto; /* Ortalamak için */
+    border: 3px solid var(--secondary-color); /* Daha belirgin kenarlık */
+    box-shadow: 0 8px 25px rgba(93, 43, 44, 0.2); /* Daha belirgin gölge */
+    transform: scale(1.02); /* Hafif büyütme */
+}
+.ai-recommendation-section .product-card:hover {
+    transform: scale(1.05) translateY(-8px); /* Hover'da daha da büyüme */
+}
+
+
+/* MOBİL İÇİN ÖZEL STİLLER */
+@media (max-width: 768px) {
+  .top-bar { height: var(--top-bar-height-mobile); }
+  .top-bar.nav-hidden { top: calc(-1 * var(--top-bar-height-mobile)); }
+  .top-bar .cafe-logo { max-height: 38px; }
+
+  .category-navbar {
+    margin-top: var(--top-bar-height-mobile); /* JS bunu güncelleyecek */
+    /* top: var(--top-bar-height-mobile); JS bunu güncelleyecek */
+    padding: var(--category-bar-padding-mobile) 10px;
+    white-space: nowrap;
+    overflow-x: auto;
+    text-align: left;
+  }
+  .category-navbar button { padding: 5px 10px; margin: 2px 3px; font-size: 0.9em; }
+
+  .main-content {
+    /* padding-top JS ile veya ilk yüklemede sabit başlıkların altına göre ayarlanacak */
+    padding-top: calc(var(--top-bar-height-mobile) + 45px + 15px); /* 45px tahmini mobil kat.bar yüksekliği */
+  }
+  .modal-content { width: 95%; margin-top: 15%; padding: 20px; }
+  .modal-product-name { font-size: 1.6em; }
+  .modal-image { max-height: 200px; }
+  .category-title { font-size: 1.8em; }
+
+  /* Mobil için AI öneri kartının ortalanması */
+  .ai-recommendation-section .product-grid {
+      grid-template-columns: 1fr; /* Tek sütun */
+  }
+  .ai-recommendation-title {
+      font-size: 2em;
+  }
+  .ai-recommendation-section {
+      padding: 15px;
+  }
+}
+
+/* Chat Bubble */
+.chat-bubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1003; /* Higher than modal */
+    transition: transform 0.2s ease-in-out;
+}
+.chat-bubble:hover {
+    transform: scale(1.05);
+}
+
+/* Chat Window */
+.chat-window {
+    position: fixed;
+    bottom: 90px; /* Above the bubble */
+    right: 20px;
+    width: 320px;
+    height: 400px;
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1003; /* Higher than modal */
+    font-size: 0.9em;
+}
+
+.chat-header {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.chat-header .close-chat {
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.chat-header .close-chat:hover {
+    color: #eee;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+    display: flex;
+}
+.chat-message.user {
+    justify-content: flex-end;
+}
+.chat-message.bot {
+    justify-content: flex-start;
+}
+.chat-message .bubble {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+.chat-message.user .bubble {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border-bottom-right-radius: 5px;
+}
+.chat-message.bot .bubble {
+    background-color: #e0e0e0;
+    color: var(--text-color-dark);
+    border-bottom-left-radius: 5px;
+}
+
+/* Yeni: Chatbot içindeki ürün kartı için özel stil */
+.chat-message .chat-product-card {
+    max-width: 180px; /* Chatbot balonu içine sığması için daha küçük */
+    margin: 10px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--card-background);
+}
+
+.chat-message .chat-product-card img {
+    width: 100%;
+    height: 100px; /* Daha küçük resim boyutu */
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.chat-message .chat-product-card .info {
+    padding: 8px;
+    width: 100%;
+}
+
+.chat-message .chat-product-card .name {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 2px;
+}
+
+.chat-message .chat-product-card .price {
+    font-size: 0.8em;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+
+.chat-input-area {
+    padding: 10px 15px;
+    background-color: var(--card-background);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.chat-input-area button {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+}
+.chat-input-area button:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color-light);
+}
+
+/* Mobile responsiveness for chat window */
+@media (max-width: 768px) {
+    .chat-window {
+        width: 90%;
+        height: 70%;
+        bottom: 15%;
+        right: 5%;
+        left: 5%;
+        max-height: 500px; /* Limit height on smaller screens */
+    }
+    .chat-bubble {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar" id="topBar">
+  <div class="logo-container" id="logoContainer">
+    <img src="logo.png" alt="TANYERİ 2025 Kafe Logosu" class="cafe-logo">
+  </div>
+</div>
+
+<nav class="category-navbar" id="categoryNavbar"></nav>
+
+<div class="main-content" id="mainContent">
+    <section id="aiRecommendationSection" class="ai-recommendation-section" style="display: none;">
+        <h2 class="ai-recommendation-title">✨ Yapay Zeka Önerisi ✨</h2>
+        <div id="aiRecommendationCardContainer" class="product-grid">
+            </div>
+    </section>
+    <div id="menuGrid"></div>
+</div>
+
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeModal()">&times;</span>
+    <img id="modalImage" src="" alt="Ürün Resmi" class="modal-image">
+    <h2 id="modalProductName" class="modal-product-name"></h2>
+    <p id="modalProductDescription"></p>
+    <p id="modalProductPrice" class="modal-product-price"></p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>&copy; 2025 TANYERİ. Tüm hakları saklıdır.</p>
+  <p>Sevgiyle Hazırlandı.</p>
+</footer>
+
+<div id="chat-bubble" class="chat-bubble">
+    <i class="fa fa-comments"></i>
+</div>
+
+<div id="chat-window" class="chat-window" style="display: none;">
+    <div class="chat-header">
+        <span>TANYERİ AI Asistanı</span>
+        <span class="close-chat" id="close-chat">&times;</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        </div>
+    <div class="chat-input-area">
+        <button id="ask-recommendation-button">Bugün ne önerirsin?</button>
+    </div>
+</div>
+
+
+<script>
+const menuArea = document.getElementById('menuGrid');
+const categoryNavbar = document.getElementById('categoryNavbar');
+const productModal = document.getElementById('productModal');
+const modalImage = document.getElementById('modalImage');
+const modalProductName = document.getElementById('modalProductName');
+const modalProductDescription = document.getElementById('modalProductDescription');
+const modalProductPrice = document.getElementById('modalProductPrice');
+const logoContainer = document.getElementById('logoContainer');
+const topBar = document.getElementById('topBar'); // topBar elementi seçildi
+const mainContent = document.getElementById('mainContent'); // mainContent elementi seçildi
+
+// Yeni AI Önerisi DOM Elementleri
+const aiRecommendationSection = document.getElementById('aiRecommendationSection');
+const aiRecommendationCardContainer = document.getElementById('aiRecommendationCardContainer');
+
+// Yeni Chatbot DOM Elements
+const chatBubble = document.getElementById('chat-bubble');
+const chatWindow = document.getElementById('chat-window');
+const closeChatButton = document.getElementById('close-chat');
+const chatMessages = document.getElementById('chat-messages');
+const askRecommendationButton = document.getElementById('ask-recommendation-button');
+
+
+let menuItems = [];
+let aiRecommendationMessageTemplate = ''; // AI mesaj şablonu için yeni değişken
+const localStorageKey = 'cafeMenuItems_Tanyeri';
+const orderLocalStorageKey = 'cafeCategoryOrder_Tanyeri';
+const aiMessageTemplateLocalStorageKey = 'aiRecommendationMessageTemplate_Tanyeri'; // Yeni anahtar
+
+
+// Helper: Slugify
+function slugify(text) {
+    if (!text) return '';
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-').replace(/ğ/g, 'g').replace(/ü/g, 'u')
+        .replace(/ş/g, 's').replace(/ı/g, 'i').replace(/ö/g, 'o')
+        .replace(/ç/g, 'c').replace(/[^\w-]+/g, '').replace(/--+/g, '-');
+}
+
+// Data Loading
+function loadMenuItems() {
+  const storedItems = localStorage.getItem(localStorageKey);
+  if (storedItems) menuItems = JSON.parse(storedItems);
+}
+function loadCategoryOrderFromStorage() {
+    const storedOrder = localStorage.getItem(orderLocalStorageKey);
+    if (storedOrder) { try { const p = JSON.parse(storedOrder); if (Array.isArray(p)) return p; } catch (e) { console.error(e); } }
+    return [];
+}
+
+// Yeni: AI Mesaj Şablonunu Yükle
+function loadAiMessageTemplate() {
+    const storedTemplate = localStorage.getItem(aiMessageTemplateLocalStorageKey);
+    if (storedTemplate) {
+        aiRecommendationMessageTemplate = storedTemplate;
+    } else {
+        // Varsayılan mesaj şablonu (admin panelinde ayarlanmazsa)
+        aiRecommendationMessageTemplate = 'Bugün size özel olarak "{urunAdi}" ürünümüzü öneririm! Fiyatı: {fiyat}. {aciklama}';
+    }
+}
+
+
+// Menu and Category Display
+function displayFullMenu() {
+    menuArea.innerHTML = '';
+    if (menuItems.length === 0) {
+        menuArea.innerHTML = `<div class="w3-col w3-padding-large w3-center" style="width:100%;"><p>Menüde henüz ürün bulunmamaktadır.</p><p>Lütfen <a href="admin.html" style="color:var(--primary-color); font-weight:bold;">Yönetim Panelinden</a> ürün ekleyiniz.</p></div>`;
+        return;
+    }
+    const effectiveCategoryOrder = loadCategoryOrderFromStorage();
+    let uniqueCategories = [...new Set(menuItems.map(item => item.category).filter(Boolean))];
+    uniqueCategories.sort((a, b) => {
+        let iA = effectiveCategoryOrder.indexOf(a), iB = effectiveCategoryOrder.indexOf(b);
+        if (iA === -1 && iB === -1) return a.localeCompare(b, 'tr'); if (iA === -1) return 1; if (iB === -1) return -1; return iA - iB;
+    });
+    uniqueCategories.forEach(category => {
+        const catSection = document.createElement('section'); catSection.className = 'category-section';
+        const catId = 'category-' + slugify(category); catSection.id = catId;
+        const title = document.createElement('h2'); title.className = 'category-title'; title.textContent = category.toUpperCase(); catSection.appendChild(title);
+        const pGrid = document.createElement('div'); pGrid.className = 'product-grid';
+        const itemsInCat = menuItems.filter(item => item.category === category);
+        if (itemsInCat.length > 0) {
+            itemsInCat.forEach(item => {
+                const card = document.createElement('div'); card.className = 'product-card'; card.onclick = () => openModal(item);
+                const img = document.createElement('img'); img.src = item.image && item.image.trim() !== "" ? item.image : 'https://via.placeholder.com/300x220/E0E0E0/BDBDBD?Text=Resim+Yok'; img.alt = item.name;
+                const info = document.createElement('div'); info.className = 'info';
+                const name = document.createElement('h3'); name.className = 'name'; name.textContent = item.name;
+                const price = document.createElement('p'); price.className = 'price'; price.textContent = item.price;
+                info.appendChild(name); info.appendChild(price); card.appendChild(img); card.appendChild(info); pGrid.appendChild(card);
+            });
+        }
+        catSection.appendChild(pGrid); menuArea.appendChild(catSection);
+    });
+}
+function displayCategories() {
+    const effectiveCategoryOrder = loadCategoryOrderFromStorage();
+    let catsForBar = [...new Set(menuItems.map(item => item.category).filter(Boolean))];
+    catsForBar.sort((a, b) => {
+        let iA = effectiveCategoryOrder.indexOf(a), iB = effectiveCategoryOrder.indexOf(b);
+        if (iA === -1 && iB === -1) return a.localeCompare(b, 'tr'); if (iA === -1) return 1; if (iB === -1) return -1; return iA - iB;
+    });
+    categoryNavbar.innerHTML = '';
+    catsForBar.forEach(category => {
+        const btn = document.createElement('button'); btn.className = 'category-button'; btn.textContent = category.toUpperCase();
+        const targetId = 'category-' + slugify(category); btn.setAttribute('data-target-id', targetId);
+        btn.onclick = () => scrollToCategory(targetId, btn); categoryNavbar.appendChild(btn);
+    });
+}
+
+// Yapay Zeka Önerisini Göster (Artık window.onload'da çağrılmayacak)
+function displayAiRecommendation() {
+    aiRecommendationCardContainer.innerHTML = ''; // Önceki içeriği temizle
+    const recommendedItem = menuItems.find(item => item.isAiRecommendation === true);
+
+    if (recommendedItem) {
+        aiRecommendationSection.style.display = 'block'; // Bölümü görünür yap
+        const card = document.createElement('div'); card.className = 'product-card'; // product-card stilini kullan
+        card.onclick = () => openModal(recommendedItem);
+
+        const img = document.createElement('img');
+        img.src = recommendedItem.image && recommendedItem.image.trim() !== "" ? recommendedItem.image : 'https://via.placeholder.com/300x220/E0E0E0/BDBDBD?Text=Resim+Yok';
+        img.alt = recommendedItem.name;
+
+        const info = document.createElement('div'); info.className = 'info';
+        const name = document.createElement('h3'); name.className = 'name'; name.textContent = recommendedItem.name;
+        const price = document.createElement('p'); price.className = 'price'; price.textContent = recommendedItem.price;
+
+        info.appendChild(name);
+        info.appendChild(price);
+        card.appendChild(img);
+        card.appendChild(info);
+        aiRecommendationCardContainer.appendChild(card);
+    } else {
+        aiRecommendationSection.style.display = 'none'; // Öneri yoksa bölümü gizle
+    }
+}
+
+
+// Navigation and Modal
+function scrollToCategory(targetId, clickedButton) {
+    document.querySelectorAll('.category-button.active').forEach(btn => btn.classList.remove('active'));
+    if (clickedButton) clickedButton.classList.add('active');
+    const section = document.getElementById(targetId);
+    if (section) {
+        let headerOffset = (document.getElementById('topBar')?.offsetHeight || 0) + 
+                             (document.getElementById('categoryNavbar')?.offsetHeight || 0) + 20;
+
+
+        const elemPos = section.getBoundingClientRect().top;
+        const offsetPos = elemPos + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPos, behavior: 'smooth' });
+    }
+}
+if (logoContainer) {
+    logoContainer.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelectorAll('.category-button.active').forEach(btn => btn.classList.remove('active'));
+    });
+}
+function openModal(item) {
+    modalImage.src = item.image && item.image.trim() !== "" ? item.image : 'https://via.placeholder.com/600x300/E0E0E0/BDBDBD?Text=Resim+Yok';
+    modalProductName.textContent = item.name;
+    modalProductDescription.textContent = item.description || "Detaylı açıklama yok.";
+    modalProductPrice.textContent = item.price;
+    productModal.style.display = "block"; document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+    productModal.style.display = "none"; document.body.style.overflow = 'auto';
+}
+window.onclick = function(event) { if (event.target == productModal) closeModal(); }
+
+// Auto-hide Navbars on Scroll
+let lastScrollTop = 0;
+const scrollDelta = 5;
+let currentTopBarHeight = topBar ? topBar.offsetHeight : 0; // Dinamik yükseklik için
+let currentCategoryNavbarHeight = categoryNavbar ? categoryNavbar.offsetHeight : 0;
+let mainContentPaddingTop = mainContent ? parseInt(window.getComputedStyle(mainContent).paddingTop) : 0;
+
+
+function setInitialBarPositions() {
+    if (!topBar || !categoryNavbar || !mainContent) return;
+    currentTopBarHeight = parseFloat(window.getComputedStyle(topBar).height); // CSS'ten gelen değeri al
+    categoryNavbar.style.marginTop = currentTopBarHeight + 'px';
+    categoryNavbar.style.top = currentTopBarHeight + 'px';
+    
+    // categoryNavbar'ın gerçek yüksekliğini hesapla (padding vs. dahil)
+    currentCategoryNavbarHeight = categoryNavbar.offsetHeight;
+    mainContent.style.paddingTop = (currentTopBarHeight + currentCategoryNavbarHeight + 20) + 'px'; // 20px buffer
+}
+
+
+window.addEventListener('scroll', function() {
+    if (!topBar || !categoryNavbar) return;
+    let st = window.pageYOffset || document.documentElement.scrollTop;
+
+    currentTopBarHeight = parseFloat(window.getComputedStyle(topBar).height); // Her scroll'da kontrol et (mobil/desktop geçişi için)
+
+
+    if (Math.abs(lastScrollTop - st) <= scrollDelta) return; // Küçük scroll'ları yoksay
+
+    if (st > lastScrollTop && st > currentTopBarHeight) {
+        // Aşağı kaydırma - Barları gizle
+        topBar.classList.add('nav-hidden');
+        categoryNavbar.style.top = '0px'; // Kategori barı en üste yapışsın
+    } else {
+        // Yukarı kaydırma veya sayfanın en üstü - Barları göster
+        if (st + window.innerHeight < document.documentElement.scrollHeight || st <= currentTopBarHeight) {
+            topBar.classList.remove('nav-hidden');
+            categoryNavbar.style.top = currentTopBarHeight + 'px'; // TopBar'ın altına
+        }
+    }
+    lastScrollTop = st <= 0 ? 0 : st;
+}, false);
+
+
+// Scrollspy
+function initializeScrollspy() {
+    const sections = Array.from(document.querySelectorAll('.category-section'));
+    if (!sections.length || !categoryNavbar) return;
+
+    const observerOptions = {
+        root: null,
+        rootMargin: `-${(topBar.offsetHeight + categoryNavbar.offsetHeight + 10)}px 0px -${window.innerHeight - (topBar.offsetHeight + categoryNavbar.offsetHeight) - 150}px 0px`,
+        threshold: 0.01
+    };
+    
+    let lastActiveButton = null;
+
+    const observer = new IntersectionObserver((entries) => {
+        let bestEntry = null;
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (!bestEntry || entry.boundingClientRect.top < bestEntry.boundingClientRect.top) {
+                    bestEntry = entry;
+                }
+            }
+        });
+
+        if (bestEntry) {
+            const targetId = bestEntry.target.id;
+            const button = categoryNavbar.querySelector(`button[data-target-id="${targetId}"]`);
+            if (button) {
+                if (lastActiveButton) lastActiveButton.classList.remove('active');
+                button.classList.add('active');
+                lastActiveButton = button;
+            }
+        }
+    }, observerOptions);
+    sections.forEach(section => observer.observe(section));
+}
+
+// Function to toggle chat window visibility
+function toggleChat() {
+    if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+        chatWindow.style.display = 'flex';
+        chatMessages.innerHTML = ''; // Clear messages when opening
+        displayChatMessage('bot', 'Merhaba! Size nasıl yardımcı olabilirim? Bugün size özel bir öneri isterseniz "Bugün ne önerirsin?" butonuna tıklayabilirsiniz.');
+    } else {
+        chatWindow.style.display = 'none';
+        chatMessages.innerHTML = ''; // Clear messages when closing
+    }
+}
+
+// Function to display messages in the chat window
+function displayChatMessage(sender, message, isProductCard = false, productData = null) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-message', sender);
+
+    if (isProductCard && productData) {
+        const card = document.createElement('div');
+        card.className = 'chat-product-card';
+        card.onclick = () => openModal(productData); // Tıklayınca modal açsın
+
+        const img = document.createElement('img');
+        img.src = productData.image && productData.image.trim() !== "" ? productData.image : 'https://via.placeholder.com/180x100/E0E0E0/BDBDBD?Text=Resim+Yok';
+        img.alt = productData.name;
+
+        const info = document.createElement('div');
+        info.className = 'info';
+        const name = document.createElement('h3');
+        name.className = 'name';
+        name.textContent = productData.name;
+        const price = document.createElement('p');
+        price.className = 'price';
+        price.textContent = productData.price;
+
+        info.appendChild(name);
+        info.appendChild(price);
+        card.appendChild(img);
+        card.appendChild(info);
+        messageDiv.appendChild(card);
+    } else {
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.classList.add('bubble');
+        bubbleDiv.textContent = message;
+        messageDiv.appendChild(bubbleDiv);
+    }
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+}
+
+// Function to handle the "Bugün ne önerirsin?" interaction
+function handleChatStart() {
+    displayChatMessage('user', 'Bugün ne önerirsin?');
+
+    // Simulate AI thinking time
+    setTimeout(() => {
+        const recommendedItem = menuItems.find(item => item.isAiRecommendation === true);
+        let botResponse = '';
+
+        if (recommendedItem) {
+            // Yönetim panelinden gelen şablonu kullanarak metin mesajı oluştur
+            botResponse = aiRecommendationMessageTemplate
+                .replace(/{urunAdi}/g, recommendedItem.name || '')
+                .replace(/{fiyat}/g, recommendedItem.price || '')
+                .replace(/{aciklama}/g, recommendedItem.description || 'Detaylı açıklama yok.');
+            
+            displayChatMessage('bot', botResponse); // Metin mesajını gönder
+            displayChatMessage('bot', '', true, recommendedItem); // Ürün kartını gönder
+        } else {
+            botResponse = 'Üzgünüm, şu an için size özel bir yapay zeka önerisi bulunmamaktadır. Menümüzdeki diğer lezzetlere göz atabilirsiniz!';
+            displayChatMessage('bot', botResponse);
+        }
+    }, 1500); // 1.5 saniye gecikme
+}
+
+// Window Onload
+window.onload = function() {
+  loadMenuItems();
+  loadAiMessageTemplate(); // Yeni: AI mesaj şablonunu yükle
+  setInitialBarPositions(); // Barların ve içeriğin başlangıç pozisyonlarını ayarla
+  displayCategories();
+  displayFullMenu();
+  // displayAiRecommendation(); // Yapay Zeka Önerisini gösteren satır kapatıldı
+  initializeScrollspy();
+
+  // Pencere yeniden boyutlandığında bar pozisyonlarını ve scrollspy'ı yeniden ayarla
+  window.addEventListener('resize', () => {
+      setInitialBarPositions();
+      // Scrollspy'ı yeniden başlatmak gerekebilir veya observer'ın rootMargin'ini güncellemek
+      // Şimdilik basit tutalım, eğer sorun olursa bu kısım daha da geliştirilebilir.
+  });
+
+  // Event Listeners for Chatbot
+  chatBubble.addEventListener('click', toggleChat);
+  closeChatButton.addEventListener('click', toggleChat);
+  askRecommendationButton.addEventListener('click', handleChatStart); // Re-trigger if already open
+};
+</script>
+
+</body>
+</html>
