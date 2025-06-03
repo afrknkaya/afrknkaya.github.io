@@ -526,7 +526,7 @@ function loadAiMessageTemplate() {
 function displayFullMenu() {
     menuArea.innerHTML = '';
     if (menuItems.length === 0) {
-        menuArea.innerHTML = `<div class="w3-col w3-padding-large w3-center" style="width:100%;"><p>Menüde henüz ürün bulunmamaktadır.</p><p>Lütfen <a href="admin.html" style="color:var(--primary-color); font-weight:bold;">Yönetim Panelinden</a> ürün ekleyiniz.</p></div>`;
+        menuArea.innerHTML = `<div class="w3-col w3-padding-large w3-center" style="width:100%;"><p>Menüde henüz ürün bulunmamaktadır.</p><p>Lütfen <a href="admin.php" style="color:var(--primary-color); font-weight:bold;">Yönetim Panelinden</a> ürün ekleyiniz.</p></div>`;
         return;
     }
     const effectiveCategoryOrder = loadCategoryOrderFromStorage();
